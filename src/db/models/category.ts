@@ -5,7 +5,7 @@ import { IUser } from "./users";
 export interface ICategory extends Document {
   name: string;
   color: string;
-  user: IUser["_id"]
+  userId: IUser["_id"]
 }
 
 // Define the schema for the category model
@@ -19,7 +19,7 @@ const categorySchema = new mongoose.Schema<ICategory>({
     type: String,
     required: true,
   },
-  user: {
+  userId: {
     type: Schema.Types.ObjectId,
     ref: "User",
     required: true
