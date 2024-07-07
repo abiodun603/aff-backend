@@ -6,6 +6,7 @@ import compression from "compression";
 import cors from "cors";
 import mongoose from "mongoose";
 import router from "./router";
+import fileUpload from 'express-fileupload'
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(cors({
 
 app.use(compression());
 app.use(cookieParser());
+app.use(express.urlencoded({extended: true}))
 app.use(bodyParser.json());
 
 const server = http.createServer(app);
@@ -32,4 +34,5 @@ mongoose.connect(MONGO_URL);
 
 mongoose.connection.on('error', error => console.log(error));
 
+app.use(fileUpload())
 app.use("/", router())
