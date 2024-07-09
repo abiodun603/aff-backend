@@ -1,14 +1,16 @@
 import mongoose, { Document, Model } from "mongoose";
 
+interface IAuthentication {
+  salt: string;
+  sessionToken: string;
+  password: string;
+}
+
 // Define the interface for the User model
 export interface IUser extends Document {
   username: string;
   email: string;
-  authentication: {
-    password: string;
-    salt: string;
-    sessionToken: string;
-  }
+  authentication: IAuthentication
 }
 
 
