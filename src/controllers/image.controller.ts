@@ -1,23 +1,25 @@
 import express, { RequestHandler } from "express";
-import { deleteImage, generatePresignedURL, uploadPicture } from "../services/file.service";
+import { deleteImage, generatePresignedURL, fileUploadMany } from "../services/file.service";
 
 export const UploadBlogImage: RequestHandler = async(req: any, res: express.Response) => {
   try {
     // Check if the file is provided
-    if (!req.file) {
+    if (!req.files) {
       return res.status(400).json({ message: "No file provided" });
     }
 
     // Upload the file
-    const result = await uploadPicture(req.file);
-
-    console.log(result, "My result");
+    const data = await fileUploadMany(req.files);
 
     // Generate the pre-signed URL
-    const presignedURL = await generatePresignedURL(result);
+    // const presignedURL = await generatePresignedURL(result);
 
     // Return the result
-    return res.status(200).json({ url: presignedURL });
+    return res.status(200).json({ 
+      status: "SUCCESS",
+      message: "Request completed successfully",
+      data
+     });
 
   } catch (error) {
     console.log(error);

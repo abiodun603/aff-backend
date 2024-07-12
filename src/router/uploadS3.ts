@@ -6,7 +6,7 @@ import {deleteFile, UploadBlogImage, viewFile } from '../controllers/image.contr
 
 
 export default(router: express.Router) => {
-  router.post('/upload', upload.single("file"), isAuthenticated, UploadBlogImage)
+  router.post('/upload', upload.array('files', 12), isAuthenticated, UploadBlogImage)
   router.get("/file/:filename", isAuthenticated, viewFile)
   router.delete("/file/:filename", isAuthenticated, deleteFile)
 }
