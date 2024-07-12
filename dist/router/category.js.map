@@ -1,0 +1,1 @@
+{"version":3,"file":"category.js","sourceRoot":"","sources":["../../src/router/category.ts"],"names":[],"mappings":";;AAEA,4EAAuF;AACvF,gDAAgD;AAEhD,kBAAe,CAAE,MAAsB,EAAG,EAAE;IAC1C,MAAM,CAAC,IAAI,CAAC,WAAW,EAAE,6BAAe,EAAE,oCAAc,CAAC,CAAA;IACzD,MAAM,CAAC,GAAG,CAAC,WAAW,EAAE,6BAAe,EAAE,wCAAkB,CAAC,CAAA;AAC9D,CAAC,CAAA"}
