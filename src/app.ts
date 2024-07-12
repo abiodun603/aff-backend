@@ -8,8 +8,12 @@ import router from "./router";
 
 const app = express();
 
+const whitelist = [
+  "http://localhost:3000"
+];
+
 app.use(cors({
-  credentials: true
+  origin: whitelist
 }))
 
 app.use(compression());
