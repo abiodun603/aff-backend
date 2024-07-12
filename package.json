@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "nodemon ./src/server.ts",
     "start": "node ./dist/server.js",
-    "prestart": "yarn build",
-    "build": "tsc",
+    "build": "tsc -p . && tsc-alias -p tsconfig.json",
     "eslint:fix": "eslint --fix",
     "test": "echo \"Error: no test specified\" && echo 1"
   },
