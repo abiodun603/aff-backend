@@ -15,8 +15,8 @@ process.on("unhandledRejection", (err) => {
   process.exit(1);
 });
 
-app.listen(config.app_port, async () => {
-  console.log(`Listening for requests on port ${config.app_port} ...`);
+app.listen(process.env.PORT, async () => {
+  console.log(`Listening for requests on port ${process.env.PORT} ...`);
   await connectDB();
   console.log("Successfully connected to mongodb");
 });
