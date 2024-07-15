@@ -1,5 +1,5 @@
 import url from "url";
-import sharp from "sharp";
+// import sharp from "sharp";
 import { randomUUID } from "crypto";
 import { parseUrl } from '@smithy/url-parser'
 import { HttpRequest } from "@smithy/protocol-http"
@@ -149,21 +149,21 @@ async function deleteImagesFromStorage(imageUrls: string[]){
   }
 }
 
-async function reduceImageSize(file: any): Promise<string> {
+// async function reduceImageSize(file: any): Promise<string> {
 
-  await sharp(file.buffer)
-  .resize({width: 1920, height: 1080, fit: "contain"})
-  .toBuffer();
+//   await sharp(file.buffer)
+//   .resize({width: 1920, height: 1080, fit: "contain"})
+//   .toBuffer();
 
-  return "";
-}
+//   return "";
+// }
 
 export {
   fileUpload,
   fileUploadMany,
   deleteImage,
   deleteImagesFromStorage,
-  reduceImageSize,
+  // reduceImageSize,
   generatePresignedURL
 };
 
