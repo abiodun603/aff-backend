@@ -5,7 +5,12 @@ const lodash_1 = require("lodash");
 const users_1 = require("../db/models/users");
 const isAuthenticated = async (req, res, next) => {
     try {
-        const sessionToken = req.cookies['ABIODUN-AUTH'];
+        // const sessionToken = req.cookies['ABIODUN-AUTH']
+        const authHeader = req.headers['authorization'];
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return res.sendStatus(403);
+        }
+        const sessionToken = authHeader.split(' ')[1];
         if (!sessionToken) {
             return res.sendStatus(403);
         }

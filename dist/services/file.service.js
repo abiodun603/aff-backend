@@ -7,10 +7,9 @@ exports.fileUpload = fileUpload;
 exports.fileUploadMany = fileUploadMany;
 exports.deleteImage = deleteImage;
 exports.deleteImagesFromStorage = deleteImagesFromStorage;
-exports.reduceImageSize = reduceImageSize;
 exports.generatePresignedURL = generatePresignedURL;
 const url_1 = __importDefault(require("url"));
-const sharp_1 = __importDefault(require("sharp"));
+// import sharp from "sharp";
 const crypto_1 = require("crypto");
 const url_parser_1 = require("@smithy/url-parser");
 const protocol_http_1 = require("@smithy/protocol-http");
@@ -118,11 +117,5 @@ async function deleteImagesFromStorage(imageUrls) {
             console.error(`Invalid image URL: ${imageUrl}`);
         }
     }
-}
-async function reduceImageSize(file) {
-    await (0, sharp_1.default)(file.buffer)
-        .resize({ width: 1920, height: 1080, fit: "contain" })
-        .toBuffer();
-    return "";
 }
 //# sourceMappingURL=file.service.js.map
