@@ -45,9 +45,10 @@ async function fileUploadMany(files) {
         const output = [];
         const s3Prefix = `https://${s3_config_1.s3Bucket}.s3.${s3_config_1.s3Region}.amazonaws.com`;
         for (const file of files) {
-            await fileUpload(file);
+            const imageDetails = await fileUpload(file);
+            //Key is the file name we want to rename our uploaded file with
             output.push({
-                location: `${s3Prefix}/${file.originalname}`,
+                location: imageDetails.location,
                 fileName: file.originalname,
             });
         }
