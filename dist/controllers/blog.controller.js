@@ -8,14 +8,14 @@ const blog_model_1 = __importDefault(require("../db/models/blog.model"));
 const lodash_1 = require("lodash");
 async function createBlogPost(req, res) {
     try {
-        const { title, slug, category, tags, content, images } = req.body;
+        const { title, slug, category, tags, content, images, status } = req.body;
         // Safely retrieve the user's ID using lodash's get function
         const userId = (0, lodash_1.get)(req, 'identity._id');
         if (!title || !slug || !category || !tags || !content || !images) {
             return res.status(400).json({ message: "All fields are required." });
         }
         const blogPost = new blog_model_1.default({
-            title, slug, category, tags, content, images, userId
+            title, slug, category, tags, content, images, userId, status
         });
         blogPost.save();
         return res.status(200).json(blogPost);

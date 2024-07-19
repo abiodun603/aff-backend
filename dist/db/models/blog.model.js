@@ -58,6 +58,11 @@ const BlogPostSchema = new mongoose_1.Schema({
         type: mongoose_1.Schema.Types.ObjectId,
         ref: "User",
         required: true
+    },
+    status: {
+        type: String,
+        enum: ["published", "draft"],
+        default: "draft"
     }
 });
 const BlogPostModel = mongoose_1.default.model("BlogPost", BlogPostSchema);

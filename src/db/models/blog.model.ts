@@ -16,6 +16,7 @@ interface IBlogPost extends Document {
   content: string;
   images: Image[];
   userId: IUser["_id"]
+  status: 'published' | 'draft';
   createdAt: Date
   updatedAt: Date
 }
@@ -56,6 +57,11 @@ const BlogPostSchema: Schema = new Schema<IBlogPost>(
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true
+     },
+     status: {
+      type: String,
+      enum: ["published", "draft"],
+      default: "draft"
      }
      
   }

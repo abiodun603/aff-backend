@@ -5,7 +5,7 @@ import { get } from 'lodash';
 async function createBlogPost ( req: express.Request, res: express.Response) {
   try {
 
-    const { title, slug, category, tags, content, images} = req.body
+    const { title, slug, category, tags, content, images, status} = req.body
 
     // Safely retrieve the user's ID using lodash's get function
     const userId = get(req, 'identity._id');
@@ -15,7 +15,7 @@ async function createBlogPost ( req: express.Request, res: express.Response) {
     }
 
     const blogPost = new BlogPostModel({
-      title, slug, category, tags, content, images, userId
+      title, slug, category, tags, content, images, userId, status
     });
 
     blogPost.save()
