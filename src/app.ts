@@ -9,7 +9,8 @@ import router from "./router";
 const app = express();
 
 const whitelist = [
-  "http://localhost:3000"
+  "http://localhost:3000",
+  "https://aff-ecommerce.vercel.app",
 ];
 
 const corsOptions: CorsOptions = {
