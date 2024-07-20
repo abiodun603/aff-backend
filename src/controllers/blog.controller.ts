@@ -48,9 +48,13 @@ async function getBlogPost (req: express.Request, res: express.Response) {
     // Ensure the userId is a valid ObjectId
     const userObjectId = new Types.ObjectId(userId);
 
-    const blogPost = await BlogPostModel.find({ userId: userObjectId }) .populate({
+    const blogPost = await BlogPostModel.find({ userId: userObjectId }).populate({
       path: 'category',
       select: 'name color' 
+    }) 
+    .populate({
+      path: 'userId',
+      select: 'username' // Specify fields to select from the User model
     });
 
     if(!blogPost){
