@@ -74,7 +74,44 @@ async function getBlogPost (req: express.Request, res: express.Response) {
 
   }
 }
+
+async function getProductById (req: express.Request, res: express.Response) {
+  try {
+
+    const productId = req.params?.id
+
+    // Safely retrieve the user's ID using lodash's get function
+    const userId = get(req, 'identity._id');
+
+    if(!userId) {
+      return res.status(401).json({ message: 'Unauthorized: User ID is required' });
+    }
+
+    const productPost = await BlogPostModel.findById(productId)
+      .populate({
+        path: 'category',
+        select: 'name color' 
+      })
+    
+    if(!productPost){
+      return res.status(404).json({ message: 'Blog post not found' });
+    }
+
+    return res.status(200).json({
+      status: "SUCCESS",
+      message: "Request completed successfully",
+      productPost
+    });
+
+  } catch (error) {
+
+    console.log("Error getting blog post:", error);
+    return res.status(500).json({ message: "Internal Server Error"})
+    
+  }
+}
 export {
   createBlogPost,
-  getBlogPost
+  getBlogPost,
+  getProductById
 }
