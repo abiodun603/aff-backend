@@ -15,16 +15,16 @@ async function createBlogPost ( req: express.Request, res: express.Response) {
       return res.status(400).json({ message: "All fields are required." });
     }
 
-    const blogPost = new BlogPostModel({
+    const productPost = new BlogPostModel({
       title, slug, category, content, images, userId, status
     });
 
-    blogPost.save()
+    productPost.save()
 
     return res.status(200).json({
       status: "SUCCESS",
       message: "Request completed successfully",
-      blogPost
+      productPost
     })
     
   } catch (error) {
@@ -48,7 +48,7 @@ async function getBlogPost (req: express.Request, res: express.Response) {
     // Ensure the userId is a valid ObjectId
     const userObjectId = new Types.ObjectId(userId);
 
-    const blogPost = await BlogPostModel.find({ userId: userObjectId }).populate({
+    const productPost = await BlogPostModel.find({ userId: userObjectId }).populate({
       path: 'category',
       select: 'name color' 
     }) 
@@ -57,14 +57,14 @@ async function getBlogPost (req: express.Request, res: express.Response) {
       select: 'username' // Specify fields to select from the User model
     });
 
-    if(!blogPost){
+    if(!productPost){
       return res.status(404).json({ message: 'Blog post not found' });
     }
 
     return res.status(200).json({
       status: "SUCCESS",
       message: "Request completed successfully",
-      blogPost
+      productPost
     })
     
   } catch (error) {
