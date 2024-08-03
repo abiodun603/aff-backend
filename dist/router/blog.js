@@ -6,5 +6,6 @@ exports.default = (router) => {
     router.post("/blog", middlewares_1.isAuthenticated, blog_controller_1.createBlogPost);
     router.get("/blog", middlewares_1.isAuthenticated, blog_controller_1.getBlogPost);
     router.get("/blog/:id", middlewares_1.isAuthenticated, blog_controller_1.getProductById);
+    router.get("/product/counts", middlewares_1.isAuthenticated, blog_controller_1.productCount);
 };
 //# sourceMappingURL=blog.js.map

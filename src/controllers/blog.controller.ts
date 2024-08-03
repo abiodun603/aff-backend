@@ -110,8 +110,48 @@ async function getProductById (req: express.Request, res: express.Response) {
     
   }
 }
+
+async function productCount(req: express.Request, res: express.Response){
+  try {
+    const counts = await BlogPostModel.aggregate([
+      {
+        $facet: {
+          totalProducts: [{ $count: "count"}],
+          publishedProducts: [{ $match: { status: "published"}}, { $count: "count"}],
+          draftProducts: [{ $match: { status: "draft"}}, { $count: "count"}]
+        }
+      },
+      {
+        $project: {
+          totalProducts: {
+            $arrayElemAt: ["$totalProducts.count", 0]
+          },
+          publishedProducts: {
+            $arrayElemAt: ["$publishedProducts.count", 0]
+          },
+          draftProducts: {
+            $arrayElemAt: ["$draftProducts.count", 0]
+          }
+        }
+      }
+    ]);
+    
+    return res.status(200).json({
+      status: "SUCCESS",
+      message: "Request completed successfully",
+      data: counts[0]
+    })
+  } catch (error) {
+
+    console.log("Error getting product counts:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+    
+  }
+}
+
 export {
   createBlogPost,
   getBlogPost,
-  getProductById
+  getProductById,
+  productCount
 }

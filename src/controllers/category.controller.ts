@@ -35,21 +35,43 @@ export const createCategory = async (req: express.Request, res: express.Response
 export const getCategoryForUser = async (req: express.Request, res: express.Response) => {
 
   try {
-    // Safely retrieve the user's ID using lodash's get function
-    const userId = get(req, 'identity._id');
+    const categories = await Category.aggregate([
+      {
+        $lookup: {
+          from: "blogposts",
+          localField: "_id",
+          foreignField: "category",
+          as: "blogPosts"
+        }
+      },
+      {
+        $project: {
+          name: 1, // include the name field in the output
+          color: 1,
+          blogPostCount: { $size: "$blogPosts" }
+        }
+      }
+    ]);
 
-    if (!userId) {
-      return res.sendStatus(403);
-    }
+    return res.status(200).json({
+      status: "SUCCESS",
+      message: "Request completed successfully",
+      categories
+    });
+    // // Safely retrieve the user's ID using lodash's get function
+    // const userId = get(req, 'identity._id');
 
-    // fetch category belonging to the logged in user
-    const categories = await Category.find({userId})
+    // if (!userId) {
+    //   return res.sendStatus(403);
+    // }
 
-    return res.status(200).json(categories);
+    // // fetch category belonging to the logged in user
+    // const categories = await Category.find({userId})
+
+    // return res.status(200).json(categories);
 
   } catch (err) {
     console.error('Error creating category:', err);
     return res.status(500).json({ message: "Internal Server Error"})
   }
-
 }

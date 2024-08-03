@@ -29,14 +29,36 @@ const createCategory = async (req, res) => {
 exports.createCategory = createCategory;
 const getCategoryForUser = async (req, res) => {
     try {
-        // Safely retrieve the user's ID using lodash's get function
-        const userId = (0, lodash_1.get)(req, 'identity._id');
-        if (!userId) {
-            return res.sendStatus(403);
-        }
-        // fetch category belonging to the logged in user
-        const categories = await category_1.default.find({ userId });
-        return res.status(200).json(categories);
+        const categories = await category_1.default.aggregate([
+            {
+                $lookup: {
+                    from: "blogposts",
+                    localField: "_id",
+                    foreignField: "category",
+                    as: "blogPosts"
+                }
+            },
+            {
+                $project: {
+                    name: 1, // include the name field in the output
+                    color: 1,
+                    blogPostCount: { $size: "$blogPosts" }
+                }
+            }
+        ]);
+        return res.status(200).json({
+            status: "SUCCESS",
+            message: "Request completed successfully",
+            categories
+        });
+        // // Safely retrieve the user's ID using lodash's get function
+        // const userId = get(req, 'identity._id');
+        // if (!userId) {
+        //   return res.sendStatus(403);
+        // }
+        // // fetch category belonging to the logged in user
+        // const categories = await Category.find({userId})
+        // return res.status(200).json(categories);
     }
     catch (err) {
         console.error('Error creating category:', err);

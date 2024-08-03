@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createBlogPost = createBlogPost;
 exports.getBlogPost = getBlogPost;
 exports.getProductById = getProductById;
+exports.productCount = productCount;
 const blog_model_1 = __importDefault(require("../db/models/blog.model"));
 const lodash_1 = require("lodash");
 const mongoose_1 = require("mongoose");
@@ -17,14 +18,14 @@ async function createBlogPost(req, res) {
         if (!title || !slug || !category || !content || !images) {
             return res.status(400).json({ message: "All fields are required." });
         }
-        const blogPost = new blog_model_1.default({
+        const productPost = new blog_model_1.default({
             title, slug, category, content, images, userId, status
         });
-        blogPost.save();
+        productPost.save();
         return res.status(200).json({
             status: "SUCCESS",
             message: "Request completed successfully",
-            blogPost
+            productPost
         });
     }
     catch (error) {
@@ -41,7 +42,7 @@ async function getBlogPost(req, res) {
         }
         // Ensure the userId is a valid ObjectId
         const userObjectId = new mongoose_1.Types.ObjectId(userId);
-        const blogPost = await blog_model_1.default.find({ userId: userObjectId }).populate({
+        const productPost = await blog_model_1.default.find({ userId: userObjectId }).populate({
             path: 'category',
             select: 'name color'
         })
@@ -49,13 +50,13 @@ async function getBlogPost(req, res) {
             path: 'userId',
             select: 'username' // Specify fields to select from the User model
         });
-        if (!blogPost) {
+        if (!productPost) {
             return res.status(404).json({ message: 'Blog post not found' });
         }
         return res.status(200).json({
             status: "SUCCESS",
             message: "Request completed successfully",
-            blogPost
+            productPost
         });
     }
     catch (error) {
@@ -87,6 +88,41 @@ async function getProductById(req, res) {
     }
     catch (error) {
         console.log("Error getting blog post:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+async function productCount(req, res) {
+    try {
+        const counts = await blog_model_1.default.aggregate([
+            {
+                $facet: {
+                    totalProducts: [{ $count: "count" }],
+                    publishedProducts: [{ $match: { status: "published" } }, { $count: "count" }],
+                    draftProducts: [{ $match: { status: "draft" } }, { $count: "count" }]
+                }
+            },
+            {
+                $project: {
+                    totalProducts: {
+                        $arrayElemAt: ["$totalProducts.count", 0]
+                    },
+                    publishedProducts: {
+                        $arrayElemAt: ["$publishedProducts.count", 0]
+                    },
+                    draftProducts: {
+                        $arrayElemAt: ["$draftProducts.count", 0]
+                    }
+                }
+            }
+        ]);
+        return res.status(200).json({
+            status: "SUCCESS",
+            message: "Request completed successfully",
+            data: counts[0]
+        });
+    }
+    catch (error) {
+        console.log("Error getting product counts:", error);
         return res.status(500).json({ message: "Internal Server Error" });
     }
 }
