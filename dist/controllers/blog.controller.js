@@ -7,6 +7,8 @@ exports.createBlogPost = createBlogPost;
 exports.getBlogPost = getBlogPost;
 exports.getProductById = getProductById;
 exports.productCount = productCount;
+exports.updateProductPost = updateProductPost;
+exports.deleteProductPost = deleteProductPost;
 const blog_model_1 = __importDefault(require("../db/models/blog.model"));
 const lodash_1 = require("lodash");
 const mongoose_1 = require("mongoose");
@@ -88,6 +90,57 @@ async function getProductById(req, res) {
     }
     catch (error) {
         console.log("Error getting blog post:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+async function updateProductPost(req, res) {
+    const { id } = req.params;
+    const { title, slug, category, content, status } = req.body;
+    const userId = (0, lodash_1.get)(req, 'identity._id');
+    try {
+        const productPost = await blog_model_1.default.findById(id);
+        if (!productPost) {
+            return res.status(404).json({ message: "Blog post not found" });
+        }
+        if (!userId) {
+            return res.status(403).json({ message: "You are not authorized to update this blog post" });
+        }
+        productPost.title = title || productPost.title;
+        productPost.slug = slug || productPost.slug;
+        productPost.category = category || productPost.category;
+        productPost.content = content || productPost.content;
+        productPost.status = status || productPost.status;
+        await productPost.save();
+        return res.status(200).json({
+            status: "SUCCESS",
+            message: "Product post updated successfully",
+            productPost,
+        });
+    }
+    catch (error) {
+        console.log("Error updating product:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+async function deleteProductPost(req, res) {
+    const { id } = req.params;
+    const userId = (0, lodash_1.get)(req, 'identity._id');
+    if (!userId) {
+        return res.status(403).json({ message: "You are not authorized to update this blog post" });
+    }
+    try {
+        const product = await blog_model_1.default.findById(id);
+        if (!product) {
+            return res.status(404).json({ message: "Blog post not found" });
+        }
+        await blog_model_1.default.findByIdAndDelete(id);
+        return res.status(200).json({
+            status: "SUCCESS",
+            message: "Blog post deleted successfully",
+        });
+    }
+    catch (error) {
+        console.log("Error deleting product:", error);
         return res.status(500).json({ message: "Internal Server Error" });
     }
 }

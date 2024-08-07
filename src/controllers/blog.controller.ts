@@ -111,6 +111,75 @@ async function getProductById (req: express.Request, res: express.Response) {
   }
 }
 
+async function updateProductPost(req: express.Request, res: express.Response) {
+  const { id } = req.params;
+  const  { title, slug, category, content, status } = req.body;
+
+  const userId = get(req, 'identity._id');
+
+  try {
+
+    const productPost = await BlogPostModel.findById(id);
+
+    if (!productPost) {
+      return res.status(404).json({ message: "Blog post not found" });
+    }
+
+    if (!userId) {
+      return res.status(403).json({ message: "You are not authorized to update this blog post" });
+    }
+
+    productPost.title = title || productPost.title;
+    productPost.slug = slug || productPost.slug;
+    productPost.category = category || productPost.category;
+    productPost.content = content || productPost.content;
+    productPost.status = status || productPost.status;
+
+    await productPost.save();
+
+    return res.status(200).json({
+      status: "SUCCESS",
+      message: "Product post updated successfully",
+      productPost,
+    });
+
+  } catch (error) {
+    console.log("Error updating product:", error);
+    return res.status(500).json({ message: "Internal Server Error"})
+  }
+}
+
+async function deleteProductPost(req: express.Request, res: express.Response){
+ const { id } = req.params;
+
+ const userId = get(req, 'identity._id');
+
+
+ if (!userId) {
+  return res.status(403).json({ message: "You are not authorized to update this blog post" });
+}
+
+ try {
+  const product = await BlogPostModel.findById(id);
+
+  if (!product) {
+    return res.status(404).json({ message: "Blog post not found" });
+  }
+
+  await BlogPostModel.findByIdAndDelete(id)
+
+  return res.status(200).json({
+    status: "SUCCESS",
+    message: "Blog post deleted successfully",
+  });
+
+ } catch (error) {
+    console.log("Error deleting product:", error);
+    return res.status(500).json({ message: "Internal Server Error"})
+
+ }
+}
+
 async function productCount(req: express.Request, res: express.Response){
   try {
     const counts = await BlogPostModel.aggregate([
@@ -153,5 +222,7 @@ export {
   createBlogPost,
   getBlogPost,
   getProductById,
-  productCount
+  productCount,
+  updateProductPost,
+  deleteProductPost
 }
