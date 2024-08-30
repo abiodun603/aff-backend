@@ -10,14 +10,23 @@ interface IAuthentication {
 export interface IUser extends Document {
   username: string;
   email: string;
-  authentication: IAuthentication
+  authentication: IAuthentication;
+  firstName: string;
+  lastName: string;
 }
 
 
 const UserSchema = new mongoose.Schema<IUser>({
   username: { 
     type: String, 
-    required: true 
+  },
+  firstName: {
+    type: String, 
+    required: true
+  },
+  lastName: {
+    type: String, 
+    required: true
   },
   email: { 
     type: String, 

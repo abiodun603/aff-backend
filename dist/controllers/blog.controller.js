@@ -160,7 +160,7 @@ async function productCount(req, res) {
                         $arrayElemAt: ["$totalProducts.count", 0]
                     },
                     publishedProducts: {
-                        $arrayElemAt: ["$publishedProducts.count", 0]
+                        $first: ["$publishedProducts.count", 0]
                     },
                     draftProducts: {
                         $arrayElemAt: ["$draftProducts.count", 0]
