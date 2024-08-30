@@ -33,9 +33,9 @@ const login = async (req, res) => {
 exports.login = login;
 const register = async (req, res) => {
     try {
-        const { email, password, username } = req.body;
+        const { email, password, firstName, lastName, username } = req.body;
         console.log(email, password, username);
-        if (!email || !password || !username) {
+        if (!email || !password || !firstName || !lastName) {
             return res.sendStatus(400);
         }
         const existingUser = await (0, users_1.getUserByEmail)(email);
@@ -46,6 +46,8 @@ const register = async (req, res) => {
         const salt = (0, helpers_1.random)();
         const user = await (0, users_1.createUser)({
             username,
+            firstName,
+            lastName,
             email,
             authentication: {
                 salt,

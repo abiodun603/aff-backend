@@ -8,14 +8,13 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const UserSchema = new mongoose_1.default.Schema({
     username: {
         type: String,
+        required: false,
     },
     firstName: {
         type: String,
-        required: true
     },
     lastName: {
         type: String,
-        required: true
     },
     email: {
         type: String,
