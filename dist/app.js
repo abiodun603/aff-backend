@@ -14,6 +14,7 @@ const app = (0, express_1.default)();
 const whitelist = [
     "http://localhost:3000",
     "https://aff-ecommerce.vercel.app",
+    "https://lasgicttraining.ropeafrica.com"
 ];
 const corsOptions = {
     origin: function (origin, callback) {
